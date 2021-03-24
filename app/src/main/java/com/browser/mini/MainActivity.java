@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -15,12 +17,14 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     public WebView webPage;
-    EditText searchBar;
+    public LinearLayout linear;
+    public EditText searchBar;
     Button BtnOK, BtnBack, BtnNext;
     ProgressBar loadBar;
     public boolean finishFlag = false;
@@ -31,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         webPage = (WebView)findViewById(R.id.webpage);
+        linear = (LinearLayout)findViewById(R.id.Linear);
         searchBar = (EditText)findViewById(R.id.searchbar);
         BtnBack = (Button)findViewById(R.id.btnBack);
         BtnOK = (Button)findViewById(R.id.btnOk);
@@ -60,34 +65,55 @@ public class MainActivity extends AppCompatActivity {
         cookieManager.setAcceptCookie(true);
         cookieManager.setAcceptThirdPartyCookies(webPage, false);
 
-        BtnOK.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String url = searchBar.getText().toString();
-                if(url.indexOf("https://") == -1){
-                    url = "https://" + url;
-                }
-                webPage.loadUrl(url);
-            }
+        BtnOK.setOnClickListener(v -> {
+            searchurl();
+            hidekeyboard();
         });
 
-        BtnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(webPage.canGoBack()){
-                    webPage.goBack();
-                }
+        BtnBack.setOnClickListener(v -> {
+            if(webPage.canGoBack()){
+                webPage.goBack();
             }
+            hidekeyboard();
         });
 
-        BtnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(webPage.canGoForward()){
-                    webPage.goForward();
-                }
+        BtnNext.setOnClickListener(v -> {
+            if(webPage.canGoForward()){
+                webPage.goForward();
             }
+            hidekeyboard();
         });
+
+        linear.setOnTouchListener((v, event) -> {
+            hidekeyboard();
+            return false;
+        });
+
+        searchBar.setOnEditorActionListener((v, actionId, event) -> {
+            switch (actionId){
+                case EditorInfo.IME_ACTION_SEARCH:
+                    searchurl();
+                    hidekeyboard();
+                    break;
+                default:
+                    return false;
+            }
+            return true;
+        });
+
+    }
+
+    public void hidekeyboard(){
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(searchBar.getWindowToken(),0);
+    }
+
+    public void searchurl(){
+        String url = searchBar.getText().toString();
+        if(url.indexOf("https://") == -1||url.indexOf("http://")==-1){
+            url = "https://" + url;
+        }
+        webPage.loadUrl(url);
     }
 
     @Override
@@ -142,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
         CookieManager.getInstance().removeSessionCookies(null);
         CookieManager.getInstance().flush();
     }
+
 
 
 }

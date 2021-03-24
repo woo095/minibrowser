@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="1"
+    android:id="@+id/Linear"
     tools:context=".MainActivity">
 
     <EditText
@@ -14,6 +15,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="https://"
+        android:imeOptions="actionSearch"
         android:inputType="textPersonName"/>
 
     <LinearLayout
