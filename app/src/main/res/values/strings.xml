@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Mini Browser</string>
+    <string name="btnBack">Back</string>
+    <string name="btnForward">Forward</string>
+    <string name="btnOk">Go</string>
+    <string name="toastquit">Press the back key once more to exit.</string>
+    <string name="warnpopname">Warning</string>
+    <string name="warnpopcontent">Are you sure you want to quit the app?</string>
+    <string name="warnpopok">Yes</string>
+    <string name="warnpopno">No</string>
 </resources>

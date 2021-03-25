@@ -123,20 +123,25 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         else if(finishFlag==false){
-            Toast.makeText(getBaseContext(),"뒤로가기 키를 한번 더 누르면 종료됩니다.",Toast.LENGTH_SHORT).show();
+            String toastcontent = getString(R.string.toastquit); //string.xml 에서 스트링 가져오기
+            Toast.makeText(getBaseContext(),toastcontent,Toast.LENGTH_SHORT).show();
             finishFlag=true;
         }
         else {
+            String warnpopupname = getString(R.string.warnpopname);
+            String warnpopupcontent = getString(R.string.warnpopcontent);
+            String warnpopupok = getString(R.string.warnpopok);
+            String warnpopupno = getString(R.string.warnpopno);
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("경고");
-            builder.setMessage("정말로 앱을 종료하시겠습니까?");
-            builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            builder.setTitle(warnpopupname);
+            builder.setMessage(warnpopupcontent);
+            builder.setNegativeButton(warnpopupno, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     finishFlag=false;
                 }
             }); //취소
-            builder.setPositiveButton("종료", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton(warnpopupok, new DialogInterface.OnClickListener() {
                 //종료시 앱을 죽인다.
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
