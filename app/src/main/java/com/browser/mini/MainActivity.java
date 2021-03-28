@@ -1,6 +1,7 @@
 package com.browser.mini;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -22,11 +23,12 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+    private SwipeRefreshLayout swipeRefreshLayout;
     public WebView webPage;
     public LinearLayout linear;
     public EditText searchBar;
-    Button BtnOK, BtnBack, BtnNext;
-    ProgressBar loadBar;
+    private Button BtnOK, BtnBack, BtnNext;
+    private ProgressBar loadBar;
     public boolean finishFlag = false;
 
     @Override
@@ -101,6 +103,26 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
+        swipeRefreshLayout = findViewById(R.id.refresh_layout);
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            webPage.reload();
+        });
+
+        swipeRefreshLayout.setColorSchemeResources(
+                android.R.color.holo_blue_bright
+        );
+
+        webPage.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+
+                searchBar.setText(webPage.getUrl());
+
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     public void hidekeyboard(){
@@ -110,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void searchurl(){
         String url = searchBar.getText().toString();
-        if(url.indexOf("https://") == -1||url.indexOf("http://")==-1){
+        if(url.indexOf("https://") == -1 && url.indexOf("http://")==-1){
             url = "https://" + url;
         }
         webPage.loadUrl(url);
@@ -145,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                 //종료시 앱을 죽인다.
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    android.os.Process.killProcess(android.os.Process.myPid());
+                    MainActivity.super.onBackPressed();
                 }
             });
             builder.show();
@@ -165,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         }
         webPage.destroy();
         clearcookies(getApplicationContext());
-
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     public static void clearcookies(Context context){

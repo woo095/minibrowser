@@ -38,7 +38,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:text="@string/btnForward"/>
-        <Button
+       <Button
             android:id="@+id/btnOk"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -56,10 +56,16 @@
         android:max="100"
         android:min="0"
         android:visibility="gone" />
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:id="@+id/refresh_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <WebView
         android:id="@+id/webpage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>
