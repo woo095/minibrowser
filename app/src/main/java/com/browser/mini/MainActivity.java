@@ -1,11 +1,13 @@
 package com.browser.mini;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
+    private LinearLayout buttonLayout;
     public WebView webPage;
     public LinearLayout linear;
     public EditText searchBar;
@@ -188,6 +191,17 @@ public class MainActivity extends AppCompatActivity {
         webPage.destroy();
         clearcookies(getApplicationContext());
         android.os.Process.killProcess(android.os.Process.myPid());
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        buttonLayout = (LinearLayout)findViewById(R.id.buttonlayout);
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            buttonLayout.setVisibility(View.GONE);
+        } else {
+            buttonLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     public static void clearcookies(Context context){
