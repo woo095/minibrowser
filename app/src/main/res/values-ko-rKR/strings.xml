@@ -10,4 +10,6 @@
     <string name="warnpopok">종료</string>
     <string name="warnpopno">취소</string>
     <string name="btnbookmark">북마크</string>
+    <string name="btnbookadd">추가</string>
+    <string name="btnbookdel">삭제</string>
 </resources>

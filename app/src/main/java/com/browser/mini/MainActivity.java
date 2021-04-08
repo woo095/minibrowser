@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
         BtnBookMark.setOnClickListener(v -> {
             String link = searchBar.getText().toString();
             intent.putExtra("golink",link);
+            intent.putExtra("goname",webPage.getTitle());
             intent.setAction("com.broswer.BOOKMARK_VIEW");
             startActivityForResult(intent, 10);
             hidekeyboard();

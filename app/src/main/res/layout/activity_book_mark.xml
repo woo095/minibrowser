@@ -6,6 +6,28 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".BookMarkActivity">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/bookmarkbuttonlayout"
+            android:orientation="horizontal">
+                <Button
+                    android:id="@+id/btnbookadd"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:text="@string/btnbookadd"/>
+                <Button
+                    android:id="@+id/btnbookdel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:text="@string/btnbookdel"/>
+        </LinearLayout>
 
 
         <ListView

@@ -9,4 +9,6 @@
     <string name="warnpopok">Yes</string>
     <string name="warnpopno">No</string>
     <string name="btnbookmark">Bookmark</string>
+    <string name="btnbookadd">Add</string>
+    <string name="btnbookdel">Remove</string>
 </resources>

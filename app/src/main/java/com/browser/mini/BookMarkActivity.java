@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -23,26 +24,30 @@ import java.util.Map;
 
 public class BookMarkActivity extends AppCompatActivity {
 
-    BookMarkDB db;
-    MyDBHandler handler;
+    private MyDBHandler handler;
 
-    BookMarklistAdapter adapter;
+    private Button btnadd, btndel;
 
     private ListView listVIew;
+
+    private SimpleAdapter simpleAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_mark);
         listVIew = (ListView)findViewById(R.id.bookmarklist);
+        btnadd = (Button)findViewById(R.id.btnbookadd);
+        btndel = (Button)findViewById(R.id.btnbookdel);
 
-        MyDBHandler handler = new MyDBHandler(BookMarkActivity.this);
+        handler = new MyDBHandler(BookMarkActivity.this);
+
 
         List<Map<String, Object>> simpleData = new ArrayList<>();
 
         simpleData = handler.SelectAll();
 
-        SimpleAdapter simpleAdapter = new SimpleAdapter(BookMarkActivity.this,
+        simpleAdapter = new SimpleAdapter(BookMarkActivity.this,
                 simpleData,
                 android.R.layout.simple_list_item_2,
                 new String[]{"_name","_link"},
@@ -66,6 +71,14 @@ public class BookMarkActivity extends AppCompatActivity {
                 setResult(RESULT_OK,intent);
                 finish();
             }
+        });
+
+        btnadd.setOnClickListener(v -> {
+            BookMarkDB bookmark = new BookMarkDB();
+            bookmark.set_link(getIntent().getStringExtra("golink"));
+            bookmark.set_name(getIntent().getStringExtra("goname"));
+            handler.addItem(bookmark);
+            simpleAdapter.notifyDataSetChanged();
         });
     }
 
