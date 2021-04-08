@@ -9,4 +9,5 @@
     <string name="warnpopcontent">정말로 앱을 종료하시겠습니까?</string>
     <string name="warnpopok">종료</string>
     <string name="warnpopno">취소</string>
+    <string name="btnbookmark">북마크</string>
 </resources>

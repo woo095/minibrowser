@@ -1,14 +1,18 @@
 package com.browser.mini;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -30,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     public WebView webPage;
     public LinearLayout linear;
     public EditText searchBar;
-    private Button BtnOK, BtnBack, BtnNext;
+    private Button BtnOK, BtnBack, BtnNext, BtnBookMark;
     private ProgressBar loadBar;
     public boolean finishFlag = false;
 
@@ -38,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        Intent intent = new Intent();
 
         webPage = (WebView)findViewById(R.id.webpage);
         linear = (LinearLayout)findViewById(R.id.Linear);
@@ -47,8 +54,10 @@ public class MainActivity extends AppCompatActivity {
         BtnNext = (Button)findViewById(R.id.btnNext);
         loadBar = (ProgressBar)findViewById(R.id.loadbar);
 
+        BtnBookMark = (Button)findViewById(R.id.btnBookmark);
+
         WebSettings set = webPage.getSettings();
-        set.setJavaScriptEnabled(true);
+        set.setJavaScriptEnabled(false);
         set.setBuiltInZoomControls(true);
         webPage.setWebViewClient(new WebViewClient());//웹뷰 활성화
         webPage.setWebChromeClient(new WebChromeClient(){
@@ -60,15 +69,19 @@ public class MainActivity extends AppCompatActivity {
                     loadBar.setVisibility(View.GONE);
                 } else {
                     loadBar.setVisibility(View.VISIBLE);
+                    clearcookies(getApplicationContext());
                 }
             }
         });
         webPage.loadUrl("https://google.com");
 
-        set.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+
+        set.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
+        set.setJavaScriptEnabled(false);
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
         cookieManager.setAcceptThirdPartyCookies(webPage, false);
+
 
         BtnOK.setOnClickListener(v -> {
             searchurl();
@@ -86,6 +99,14 @@ public class MainActivity extends AppCompatActivity {
             if(webPage.canGoForward()){
                 webPage.goForward();
             }
+            hidekeyboard();
+        });
+
+        BtnBookMark.setOnClickListener(v -> {
+            String link = searchBar.getText().toString();
+            intent.putExtra("golink",link);
+            intent.setAction("com.broswer.BOOKMARK_VIEW");
+            startActivityForResult(intent, 10);
             hidekeyboard();
         });
 
@@ -179,8 +200,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-
         webPage.stopLoading();
         webPage.clearHistory();
         webPage.clearFormData();
@@ -191,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
         webPage.destroy();
         clearcookies(getApplicationContext());
         android.os.Process.killProcess(android.os.Process.myPid());
+        super.onDestroy();
     }
 
     @Override
@@ -201,6 +221,24 @@ public class MainActivity extends AppCompatActivity {
             buttonLayout.setVisibility(View.GONE);
         } else {
             buttonLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case 10:
+                switch (resultCode){
+                    case RESULT_OK:
+                        String link = data.getStringExtra("getlink");
+                        Log.e("링크 테스트",link);
+                        EditText Searchbar = (EditText)findViewById(R.id.searchbar);
+                        Searchbar.setText(link);
+                        webPage.loadUrl(Searchbar.getText().toString());
+                        break;
+                }
+                break;
         }
     }
 
