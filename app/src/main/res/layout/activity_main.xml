@@ -1,22 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="1"
-    android:id="@+id/Linear"
-    tools:context=".MainActivity">
+    android:fitsSystemWindows="true"
+    android:id="@+id/main_drawer"
+    android:weightSum="1">
 
-    <EditText
-        android:id="@+id/searchbar"
+
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="https://"
-        android:imeOptions="actionSearch"
-        android:inputType="textPersonName"/>
+        android:layout_height="match_parent"
+        android:id="@+id/Linear">
+
+
+        <EditText
+            android:id="@+id/searchbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="https://"
+            android:imeOptions="actionSearch"
+            android:inputType="textPersonName"/>
+
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -46,6 +57,7 @@
             android:layout_weight="1"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:visibility="gone"
             android:text="@string/btnOk"/>
         <Button
             android:id="@+id/btnBookmark"
@@ -54,6 +66,7 @@
             android:layout_weight="1"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:visibility="gone"
             android:text="@string/btnbookmark"/>
     </LinearLayout>
 
@@ -77,4 +90,17 @@
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-</LinearLayout>
+
+    </LinearLayout>
+
+
+
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/main_drawer_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:menu="@menu/menu_drawer"/>
+
+</androidx.drawerlayout.widget.DrawerLayout>

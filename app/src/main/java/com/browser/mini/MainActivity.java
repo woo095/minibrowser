@@ -2,7 +2,9 @@ package com.browser.mini;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.AlertDialog;
@@ -13,6 +15,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -28,7 +31,12 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.material.navigation.NavigationView;
+
 public class MainActivity extends AppCompatActivity {
+    private ActionBarDrawerToggle drawerToggle;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private LinearLayout buttonLayout;
     public WebView webPage;
@@ -37,6 +45,14 @@ public class MainActivity extends AppCompatActivity {
     private Button BtnOK, BtnBack, BtnNext, BtnBookMark;
     private ProgressBar loadBar;
     public boolean finishFlag = false;
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(drawerToggle.onOptionsItemSelected(item)){
+            return false;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +70,14 @@ public class MainActivity extends AppCompatActivity {
         BtnNext = (Button)findViewById(R.id.btnNext);
         loadBar = (ProgressBar)findViewById(R.id.loadbar);
 
+
         BtnBookMark = (Button)findViewById(R.id.btnBookmark);
+
+        drawerLayout = findViewById(R.id.main_drawer);
+        drawerToggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.drawer_open, R.string.drawer_close);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        drawerToggle.syncState();
 
         WebSettings set = webPage.getSettings();
         set.setJavaScriptEnabled(false);
@@ -102,6 +125,19 @@ public class MainActivity extends AppCompatActivity {
             hidekeyboard();
         });
 
+        navigationView = findViewById(R.id.main_drawer_view);
+        navigationView.setNavigationItemSelectedListener(item -> {
+            if(item.getItemId() == R.id.menu_bookmark){
+                String link = searchBar.getText().toString();
+                intent.putExtra("golink",link);
+                intent.putExtra("goname",webPage.getTitle());
+                intent.setAction("com.broswer.BOOKMARK_VIEW");
+                startActivityForResult(intent, 10);
+                hidekeyboard();
+            }
+            return false;
+        });
+
         BtnBookMark.setOnClickListener(v -> {
             String link = searchBar.getText().toString();
             intent.putExtra("golink",link);
@@ -112,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         linear.setOnTouchListener((v, event) -> {
-            hidekeyboard();
+            //hidekeyboard();
             return false;
         });
 

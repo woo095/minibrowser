@@ -57,11 +57,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
 
     //itemname을 받아서 삭제하는 메소드
-    public void deleteItem(String name){
+    public void deleteItem(int id){
         SQLiteDatabase db = getWritableDatabase();
         //?를 이용해서 파라미터를 바인딩 한후 SQL을 실행
-       db.execSQL("delete from bookmark where _name = ?",
-                new String[]{name});
+       db.execSQL("delete from bookmark where _id = "+id);
     }
 
     public List SelectAll(){

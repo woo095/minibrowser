@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
@@ -32,6 +33,8 @@ public class BookMarkActivity extends AppCompatActivity {
 
     private SimpleAdapter simpleAdapter;
 
+    private List<Map<String, Object>> simpleData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,13 +46,13 @@ public class BookMarkActivity extends AppCompatActivity {
         handler = new MyDBHandler(BookMarkActivity.this);
 
 
-        List<Map<String, Object>> simpleData = new ArrayList<>();
+        simpleData = new ArrayList<>();
 
         simpleData = handler.SelectAll();
 
         simpleAdapter = new SimpleAdapter(BookMarkActivity.this,
                 simpleData,
-                android.R.layout.simple_list_item_2,
+                android.R.layout.simple_list_item_multiple_choice,
                 new String[]{"_name","_link"},
                 new int[]{android.R.id.text1, android.R.id.text2}
                 );
@@ -65,7 +68,7 @@ public class BookMarkActivity extends AppCompatActivity {
                 String link=bookmark.get_link();*/
                 HashMap<String, Object> tmp = (HashMap<String, Object>)parent.getItemAtPosition(position);
                 String link = tmp.get("_link").toString();
-                Log.e("확인",link);
+                //Log.e("확인",link);
                 Intent intent = new Intent();
                 intent.putExtra("getlink",link);
                 setResult(RESULT_OK,intent);
@@ -78,6 +81,24 @@ public class BookMarkActivity extends AppCompatActivity {
             bookmark.set_link(getIntent().getStringExtra("golink"));
             bookmark.set_name(getIntent().getStringExtra("goname"));
             handler.addItem(bookmark);
+            simpleData = handler.SelectAll();
+            simpleAdapter.notifyDataSetChanged();
+            finish();
+        });
+
+        btndel.setOnClickListener(v -> {
+            SparseBooleanArray checkedItems = listVIew.getCheckedItemPositions();
+            int count = simpleAdapter.getCount();
+
+            for(int i = count-1; i>=0;i--){
+                if(checkedItems.get(i)){
+                    //handler.deleteItem(checkedItems.get(i).);
+                    HashMap<String, Object> tmp = (HashMap<String, Object>)listVIew.getItemAtPosition(i);
+                    int id = Integer.parseInt(tmp.get("_id").toString());
+                    handler.deleteItem(id);
+                }
+            }
+            simpleData = handler.SelectAll();
             simpleAdapter.notifyDataSetChanged();
         });
     }

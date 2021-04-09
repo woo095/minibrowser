@@ -11,4 +11,7 @@
     <string name="btnbookmark">Bookmark</string>
     <string name="btnbookadd">Add</string>
     <string name="btnbookdel">Remove</string>
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
+    <string name="drawer_books">BookMark</string>
 </resources>

@@ -12,4 +12,7 @@
     <string name="btnbookmark">북마크</string>
     <string name="btnbookadd">추가</string>
     <string name="btnbookdel">삭제</string>
+    <string name="drawer_open">네비게이션 열기</string>
+    <string name="drawer_close">네비게이션 열기</string>
+    <string name="drawer_books">북마크</string>
 </resources>
