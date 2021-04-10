@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,13 +27,15 @@ import java.util.Map;
 
 public class BookMarkActivity extends AppCompatActivity {
 
+    private boolean multiplechoicemode = false;
+
     private MyDBHandler handler;
 
     private Button btnadd, btndel;
 
     private ListView listVIew;
 
-    private SimpleAdapter simpleAdapter;
+    private SimpleAdapter simpleAdapter, multipleAdapter;
 
     private List<Map<String, Object>> simpleData;
 
@@ -52,10 +56,17 @@ public class BookMarkActivity extends AppCompatActivity {
 
         simpleAdapter = new SimpleAdapter(BookMarkActivity.this,
                 simpleData,
-                android.R.layout.simple_list_item_multiple_choice,
+                android.R.layout.simple_list_item_1,
                 new String[]{"_name","_link"},
                 new int[]{android.R.id.text1, android.R.id.text2}
                 );
+
+        multipleAdapter = new SimpleAdapter(BookMarkActivity.this,
+                simpleData,
+                android.R.layout.simple_list_item_multiple_choice,
+                new String[]{"_name","_link"},
+                new int[]{android.R.id.text1, android.R.id.text2}
+        );
 
 
         listVIew.setAdapter(simpleAdapter);
@@ -66,6 +77,9 @@ public class BookMarkActivity extends AppCompatActivity {
                 ListView listView = (ListView)parent;
                 /*BookMarkDB bookmark = (BookMarkDB) listView.getItemAtPosition(position);
                 String link=bookmark.get_link();*/
+                if(multiplechoicemode==true){
+                    return;
+                }
                 HashMap<String, Object> tmp = (HashMap<String, Object>)parent.getItemAtPosition(position);
                 String link = tmp.get("_link").toString();
                 //Log.e("확인",link);
@@ -76,6 +90,16 @@ public class BookMarkActivity extends AppCompatActivity {
             }
         });
 
+        listVIew.setOnItemLongClickListener((parent, view, position, id) -> {
+            listVIew.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+            listVIew.setAdapter(multipleAdapter);
+            multiplechoicemode = true;
+            simpleAdapter.notifyDataSetChanged();
+            Toast.makeText(getApplicationContext(),R.string.warndelbookmk,Toast.LENGTH_SHORT).show();
+            return true;
+        });
+
+
         btnadd.setOnClickListener(v -> {
             BookMarkDB bookmark = new BookMarkDB();
             bookmark.set_link(getIntent().getStringExtra("golink"));
@@ -83,6 +107,7 @@ public class BookMarkActivity extends AppCompatActivity {
             handler.addItem(bookmark);
             simpleData = handler.SelectAll();
             simpleAdapter.notifyDataSetChanged();
+            Toast.makeText(getApplicationContext(),R.string.warnsavbookmk,Toast.LENGTH_LONG).show();
             finish();
         });
 
@@ -98,8 +123,12 @@ public class BookMarkActivity extends AppCompatActivity {
                     handler.deleteItem(id);
                 }
             }
+            listVIew.setChoiceMode(ListView.CHOICE_MODE_NONE);
+            listVIew.setAdapter(simpleAdapter);
+            multiplechoicemode = false;
             simpleData = handler.SelectAll();
             simpleAdapter.notifyDataSetChanged();
+            Toast.makeText(getApplicationContext(),R.string.warndelbookmksuccs,Toast.LENGTH_LONG).show();
         });
     }
 

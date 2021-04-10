@@ -9,6 +9,9 @@
     <string name="warnpopcontent">정말로 앱을 종료하시겠습니까?</string>
     <string name="warnpopok">종료</string>
     <string name="warnpopno">취소</string>
+    <string name="warnsavbookmk">링크를 북마크로 지정했습니다.</string>
+    <string name="warndelbookmksuccs">지정하신 북마크를 지웠습니다.</string>
+    <string name="warndelbookmk">북마크 지우기 모드 활성화</string>
     <string name="btnbookmark">북마크</string>
     <string name="btnbookadd">추가</string>
     <string name="btnbookdel">삭제</string>
