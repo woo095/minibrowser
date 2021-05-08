@@ -60,6 +60,7 @@ public class BookMarkActivity extends AppCompatActivity {
                 new String[]{"_name","_link"},
                 new int[]{android.R.id.text1, android.R.id.text2}
                 );
+        listVIew.setAdapter(simpleAdapter);
 
         multipleAdapter = new SimpleAdapter(BookMarkActivity.this,
                 simpleData,
@@ -68,8 +69,6 @@ public class BookMarkActivity extends AppCompatActivity {
                 new int[]{android.R.id.text1, android.R.id.text2}
         );
 
-
-        listVIew.setAdapter(simpleAdapter);
 
         listVIew.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -94,7 +93,9 @@ public class BookMarkActivity extends AppCompatActivity {
             listVIew.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
             listVIew.setAdapter(multipleAdapter);
             multiplechoicemode = true;
-            simpleAdapter.notifyDataSetChanged();
+            //simpleAdapter.notifyDataSetChanged();
+            btnadd.setVisibility(View.GONE);
+            btndel.setVisibility(View.VISIBLE);
             Toast.makeText(getApplicationContext(),R.string.warndelbookmk,Toast.LENGTH_SHORT).show();
             return true;
         });
@@ -107,6 +108,7 @@ public class BookMarkActivity extends AppCompatActivity {
             handler.addItem(bookmark);
             simpleData = handler.SelectAll();
             simpleAdapter.notifyDataSetChanged();
+            listVIew.setAdapter(simpleAdapter);
             Toast.makeText(getApplicationContext(),R.string.warnsavbookmk,Toast.LENGTH_LONG).show();
             finish();
         });
@@ -121,16 +123,24 @@ public class BookMarkActivity extends AppCompatActivity {
                     HashMap<String, Object> tmp = (HashMap<String, Object>)listVIew.getItemAtPosition(i);
                     int id = Integer.parseInt(tmp.get("_id").toString());
                     handler.deleteItem(id);
+                    simpleData.clear();
+                    simpleData = handler.SelectAll();
                 }
             }
             listVIew.setChoiceMode(ListView.CHOICE_MODE_NONE);
+            simpleAdapter.notifyDataSetChanged();
             listVIew.setAdapter(simpleAdapter);
             multiplechoicemode = false;
-            simpleData = handler.SelectAll();
-            simpleAdapter.notifyDataSetChanged();
+            btndel.setVisibility(View.GONE);
+            btnadd.setVisibility(View.VISIBLE);
             Toast.makeText(getApplicationContext(),R.string.warndelbookmksuccs,Toast.LENGTH_LONG).show();
         });
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        simpleAdapter.notifyDataSetChanged();
+        multipleAdapter.notifyDataSetChanged();
+    }
 }

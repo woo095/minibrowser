@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="https://"
+            android:selectAllOnFocus="true"
             android:imeOptions="actionSearch"
             android:inputType="textPersonName"/>
 

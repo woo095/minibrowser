@@ -28,7 +28,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
                 "_name text, _link text)");
 
         db.execSQL("insert into bookmark(_name, _link) " +
-                "values('Google','http://google.com')");
+                "values('duckduckgo','http://duckduckgo.com')");
     }
 
     //데이터베이스 버전이 변경도니 경우 호출되는 메소드
@@ -64,7 +64,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
     }
 
     public List SelectAll(){
-        String query = "select * from bookmark";
+        String query = "select * from bookmark order by _id asc";
         List<Map<String, Object>> simpleData = new ArrayList<>();
 
         Cursor cur = getReadableDatabase().rawQuery(query,null);
@@ -79,4 +79,5 @@ public class MyDBHandler extends SQLiteOpenHelper {
         }
         return simpleData;
     }
+
 }

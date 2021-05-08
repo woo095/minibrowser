@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        webPage.loadUrl("https://google.com");
+        webPage.loadUrl("https://duckduckgo.com");
 
 
         set.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
@@ -277,7 +277,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (resultCode){
                     case RESULT_OK:
                         String link = data.getStringExtra("getlink");
-                        Log.e("링크 테스트",link);
+                        //Log.e("링크 테스트",link);
                         EditText Searchbar = (EditText)findViewById(R.id.searchbar);
                         Searchbar.setText(link);
                         webPage.loadUrl(Searchbar.getText().toString());
