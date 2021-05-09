@@ -92,8 +92,8 @@ public class BookMarkActivity extends AppCompatActivity {
         listVIew.setOnItemLongClickListener((parent, view, position, id) -> {
             listVIew.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
             listVIew.setAdapter(multipleAdapter);
+            listVIew.setItemChecked(position, true);
             multiplechoicemode = true;
-            //simpleAdapter.notifyDataSetChanged();
             btnadd.setVisibility(View.GONE);
             btndel.setVisibility(View.VISIBLE);
             Toast.makeText(getApplicationContext(),R.string.warndelbookmk,Toast.LENGTH_SHORT).show();
@@ -123,24 +123,16 @@ public class BookMarkActivity extends AppCompatActivity {
                     HashMap<String, Object> tmp = (HashMap<String, Object>)listVIew.getItemAtPosition(i);
                     int id = Integer.parseInt(tmp.get("_id").toString());
                     handler.deleteItem(id);
-                    simpleData.clear();
-                    simpleData = handler.SelectAll();
+                    simpleData.remove(tmp);
                 }
             }
             listVIew.setChoiceMode(ListView.CHOICE_MODE_NONE);
-            simpleAdapter.notifyDataSetChanged();
             listVIew.setAdapter(simpleAdapter);
+            simpleAdapter.notifyDataSetChanged();
             multiplechoicemode = false;
             btndel.setVisibility(View.GONE);
             btnadd.setVisibility(View.VISIBLE);
             Toast.makeText(getApplicationContext(),R.string.warndelbookmksuccs,Toast.LENGTH_LONG).show();
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        simpleAdapter.notifyDataSetChanged();
-        multipleAdapter.notifyDataSetChanged();
     }
 }

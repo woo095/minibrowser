@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         WebSettings set = webPage.getSettings();
         set.setJavaScriptEnabled(false);
         set.setBuiltInZoomControls(true);
+        set.setDisplayZoomControls(false);
         webPage.setWebViewClient(new WebViewClient());//웹뷰 활성화
         webPage.setWebChromeClient(new WebChromeClient(){
             @Override
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         webPage.loadUrl("https://duckduckgo.com");
+
 
 
         set.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
