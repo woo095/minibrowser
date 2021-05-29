@@ -199,10 +199,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void searchurl(){
         String url = searchBar.getText().toString();
-        if(url.indexOf("https://") == -1 && url.indexOf("http://")==-1){
-            url = "https://" + url;
+        String searchurl = "https://duckduckgo.com/html?q=";
+        String result = "";
+        if(!url.contains("https://") && !url.contains("http://")){
+            result = searchurl + url;
         }
-        webPage.loadUrl(url);
+        if(url.contains(".com") || url.contains(".co")){
+            result = "https://" + url;
+        }
+        webPage.loadUrl(result);
     }
 
     @Override
