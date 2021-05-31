@@ -11,6 +11,7 @@
     <string name="warnsavbookmk">The link successfully saved on Bookmark list</string>
     <string name="warndelbookmksuccs">Bookmarks successfully removed</string>
     <string name="warndelbookmk">Remove Bookmarks mode initiated</string>
+    <string name="warncancelbookmkdel">canceld the Remove Bookmarks mode</string>
     <string name="btnbookmark">Bookmark</string>
     <string name="btnbookadd">Add</string>
     <string name="btnbookdel">Remove</string>

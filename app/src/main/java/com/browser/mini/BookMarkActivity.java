@@ -90,12 +90,13 @@ public class BookMarkActivity extends AppCompatActivity {
         });
 
         listVIew.setOnItemLongClickListener((parent, view, position, id) -> {
-            listVIew.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+           /* listVIew.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
             listVIew.setAdapter(multipleAdapter);
             listVIew.setItemChecked(position, true);
             multiplechoicemode = true;
             btnadd.setVisibility(View.GONE);
-            btndel.setVisibility(View.VISIBLE);
+            btndel.setVisibility(View.VISIBLE);*/
+            listmultiplemode(position);
             Toast.makeText(getApplicationContext(),R.string.warndelbookmk,Toast.LENGTH_SHORT).show();
             return true;
         });
@@ -126,13 +127,42 @@ public class BookMarkActivity extends AppCompatActivity {
                     simpleData.remove(tmp);
                 }
             }
-            listVIew.setChoiceMode(ListView.CHOICE_MODE_NONE);
+            /* listVIew.setChoiceMode(ListView.CHOICE_MODE_NONE);
             listVIew.setAdapter(simpleAdapter);
             simpleAdapter.notifyDataSetChanged();
             multiplechoicemode = false;
             btndel.setVisibility(View.GONE);
-            btnadd.setVisibility(View.VISIBLE);
+            btnadd.setVisibility(View.VISIBLE); */
+            listrestoresimple();
             Toast.makeText(getApplicationContext(),R.string.warndelbookmksuccs,Toast.LENGTH_LONG).show();
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(multiplechoicemode == true){
+            listrestoresimple();
+            Toast.makeText(getApplicationContext(),R.string.warncancelbookmkdel,Toast.LENGTH_LONG).show();
+            return; //액티비티 종료 방지
+        }
+        super.onBackPressed();
+    }
+
+    private void listmultiplemode(int position){
+        listVIew.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        listVIew.setAdapter(multipleAdapter);
+        listVIew.setItemChecked(position, true);
+        multiplechoicemode = true;
+        btnadd.setVisibility(View.GONE);
+        btndel.setVisibility(View.VISIBLE);
+    }
+
+    private void listrestoresimple(){
+        listVIew.setChoiceMode(ListView.CHOICE_MODE_NONE);
+        listVIew.setAdapter(simpleAdapter);
+        simpleAdapter.notifyDataSetChanged();
+        multiplechoicemode = false;
+        btndel.setVisibility(View.GONE);
+        btnadd.setVisibility(View.VISIBLE);
     }
 }
