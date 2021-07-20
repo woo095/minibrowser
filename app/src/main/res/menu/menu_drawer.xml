@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_bookmark"
         android:icon="@android:drawable/ic_menu_agenda"
         android:title="@string/drawer_books" />
+    <item
+        android:checkable="true"
+        android:checked="true"
+        app:actionLayout="@layout/widget_check"
+        android:id="@+id/javascript_check"
+        android:icon="@android:drawable/ic_menu_send"
+        android:title="@string/drawer_javasc"
+        />
 </menu>

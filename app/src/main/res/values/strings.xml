@@ -18,4 +18,5 @@
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
     <string name="drawer_books">BookMark</string>
+    <string name="drawer_javasc">setJavaScript</string>
 </resources>

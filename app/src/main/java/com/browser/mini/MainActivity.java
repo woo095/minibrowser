@@ -2,6 +2,7 @@ package com.browser.mini;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
@@ -13,12 +14,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
@@ -55,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
         set.setBuiltInZoomControls(true);
         set.setDisplayZoomControls(false);
         webPage.setWebViewClient(new WebViewClient());//웹뷰 활성화
+        webPage.setFocusable(false);
+        webPage.setFocusableInTouchMode(false);
         webPage.setWebChromeClient(new WebChromeClient(){
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
@@ -95,6 +102,9 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     loadBar.setVisibility(View.VISIBLE);
                     clearcookies(getApplicationContext());
+                    if(!webPage.canGoBack()){
+                        BtnBack.setVisibility(View.GONE);
+                    }
                 }
             }
         });
@@ -137,6 +147,14 @@ public class MainActivity extends AppCompatActivity {
                 intent.setAction("com.broswer.BOOKMARK_VIEW");
                 startActivityForResult(intent, 10);
                 hidekeyboard();
+            } else if(item.getItemId() == R.id.javascript_check){
+                if(set.getJavaScriptEnabled() == true){
+                    item.setChecked(false);
+                    set.setJavaScriptEnabled(false);
+                } else if(set.getJavaScriptEnabled() == false){
+                    item.setChecked(true);
+                    set.setJavaScriptEnabled(true);
+                }
             }
             if(drawerLayout.isDrawerOpen(GravityCompat.START)) {
                 drawerLayout.closeDrawer(GravityCompat.START);
@@ -153,10 +171,10 @@ public class MainActivity extends AppCompatActivity {
             hidekeyboard();
         });
 
-        linear.setOnTouchListener((v, event) -> {
+       /* linear.setOnTouchListener((v, event) -> {
             //hidekeyboard();
             return false;
-        });
+        });*/
 
         searchBar.setOnEditorActionListener((v, actionId, event) -> {
             switch (actionId){
@@ -175,6 +193,24 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(() -> {
             webPage.reload();
         });
+
+        webPage.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if(scrollY == 0){
+                    swipeRefreshLayout.setEnabled(true);
+                } else {
+                    swipeRefreshLayout.setEnabled(false);
+                }
+                String tmp = String.valueOf(scrollY);
+                //Log.e("스크롤 변화 테스트", tmp);
+            }
+        });
+
+        //스크롤 올리는 도중 새로고침 방지
+      /* swipeRefreshLayout.getViewTreeObserver().addOnScrollChangedListener(() -> {
+           swipeRefreshLayout.setEnabled(webPage.getScrollY() == 0);
+       });*/
 
         swipeRefreshLayout.setColorSchemeResources(
                 android.R.color.holo_blue_bright
@@ -208,6 +244,18 @@ public class MainActivity extends AppCompatActivity {
             result = "https://" + url;
         }
         webPage.loadUrl(result);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_ENTER:
+                searchurl();
+                hidekeyboard();
+                return true;
+            default:
+                return super.onKeyDown(keyCode, event);
+        }
     }
 
     @Override
