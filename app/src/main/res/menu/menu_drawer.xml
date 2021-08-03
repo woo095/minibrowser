@@ -7,8 +7,6 @@
         android:title="@string/drawer_books" />
     <item
         android:checkable="true"
-        android:checked="true"
-        app:actionLayout="@layout/widget_check"
         android:id="@+id/javascript_check"
         android:icon="@android:drawable/ic_menu_send"
         android:title="@string/drawer_javasc"

@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -13,10 +14,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -39,6 +42,10 @@ import android.widget.Toast;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
+
+    private SharedPreferences sharpref;
+    private SharedPreferences.Editor srprefEditor;
+
     private ActionBarDrawerToggle drawerToggle;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -50,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     private Button BtnOK, BtnBack, BtnNext, BtnBookMark;
     private ProgressBar loadBar;
     public boolean finishFlag = false;
+
+    private String setjavatogglestr = "setJavatoggle";
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -67,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         Intent intent = new Intent();
+
+        sharpref = PreferenceManager.getDefaultSharedPreferences(this);
+        srprefEditor = sharpref.edit();
 
         webPage = (WebView)findViewById(R.id.webpage);
         linear = (LinearLayout)findViewById(R.id.Linear);
@@ -86,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         drawerToggle.syncState();
 
         WebSettings set = webPage.getSettings();
-        set.setJavaScriptEnabled(false);
+        set.setJavaScriptEnabled(sharpref.getBoolean(setjavatogglestr, false));
         set.setBuiltInZoomControls(true);
         set.setDisplayZoomControls(false);
         webPage.setWebViewClient(new WebViewClient());//웹뷰 활성화
@@ -113,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         set.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
-        set.setJavaScriptEnabled(false);
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
         cookieManager.setAcceptThirdPartyCookies(webPage, false);
@@ -151,9 +162,13 @@ public class MainActivity extends AppCompatActivity {
                 if(set.getJavaScriptEnabled() == true){
                     item.setChecked(false);
                     set.setJavaScriptEnabled(false);
+                    srprefEditor.putBoolean(setjavatogglestr, false);
+                    srprefEditor.apply();
                 } else if(set.getJavaScriptEnabled() == false){
                     item.setChecked(true);
                     set.setJavaScriptEnabled(true);
+                    srprefEditor.putBoolean(setjavatogglestr,true);
+                    srprefEditor.apply();
                 }
             }
             if(drawerLayout.isDrawerOpen(GravityCompat.START)) {
